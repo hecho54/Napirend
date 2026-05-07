@@ -43,42 +43,67 @@ body {
 
 header {
   background: var(--accent);
-  padding: calc(var(--safe-top) + 18px) 20px 18px;
+  padding: calc(var(--safe-top) + 14px) 16px 14px;
   flex-shrink: 0;
 }
 
-.header-date {
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 4px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.header-row {
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.nav-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.92); }
+
+.nav-center { flex: 1; text-align: center; }
+
+.header-date {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
 }
 
 .header-title {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
 }
 
-.progress-badge {
-  background: rgba(255,255,255,0.18);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 5px 13px;
-  border-radius: 20px;
+.header-title.today-mark::after {
+  content: ' •';
+  color: rgba(255,255,255,0.5);
+  font-size: 14px;
+}
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .progress-bar-wrap {
-  margin-top: 14px;
+  flex: 1;
   height: 3px;
   background: rgba(255,255,255,0.2);
   border-radius: 4px;
@@ -87,44 +112,37 @@ header {
 
 .progress-bar {
   height: 100%;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.85);
   border-radius: 4px;
   transition: width 0.4s ease;
 }
 
-#install-banner {
-  display: none;
-  background: var(--accent-light);
-  border-bottom: 1px solid #b7dfc9;
-  padding: 10px 16px;
+.progress-badge {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
   flex-shrink: 0;
-  align-items: center;
-  gap: 10px;
 }
 
-#install-banner span { flex: 1; font-size: 13px; color: var(--accent-text); font-weight: 500; }
-
-.btn-install {
-  background: var(--accent);
-  color: #fff;
+.today-btn {
+  background: rgba(255,255,255,0.18);
   border: none;
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-size: 13px;
+  color: #fff;
+  font-size: 11px;
   font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
   cursor: pointer;
   font-family: inherit;
+  letter-spacing: 0.03em;
+  transition: background 0.15s;
 }
 
-.btn-dismiss {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px 6px;
-  line-height: 1;
-}
+.today-btn:active { background: rgba(255,255,255,0.35); }
 
 .scroll-area {
   flex: 1;
@@ -230,11 +248,28 @@ main {
 
 .empty {
   text-align: center;
-  padding: 60px 0 40px;
+  padding: 50px 0 30px;
   color: var(--muted);
   font-size: 15px;
-  line-height: 1.8;
+  line-height: 1.9;
 }
+
+.copy-btn {
+  margin-top: 14px;
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent-text);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.copy-btn:active { background: #c8eedd; }
 
 .bottom-bar {
   flex-shrink: 0;
@@ -317,21 +352,22 @@ main {
 <body>
 
 <header>
-  <div class="header-date" id="date-label"></div>
-  <div class="header-row">
-    <div class="header-title">Napirend</div>
-    <div class="progress-badge" id="progress-badge">0 / 0</div>
+  <div class="nav-row">
+    <button class="nav-btn" onclick="changeDay(-1)">&#8249;</button>
+    <div class="nav-center">
+      <div class="header-date" id="date-label"></div>
+      <div class="header-title" id="day-title"></div>
+    </div>
+    <button class="nav-btn" onclick="changeDay(1)">&#8250;</button>
   </div>
-  <div class="progress-bar-wrap">
-    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+  <div class="progress-row">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-badge" id="progress-badge">0 / 0</div>
+    <button class="today-btn" onclick="goToday()">Ma</button>
   </div>
 </header>
-
-<div id="install-banner">
-  <span>📲 Telepítsd főképernyőre!</span>
-  <button class="btn-install" id="btn-install">Telepítés</button>
-  <button class="btn-dismiss" id="btn-dismiss">×</button>
-</div>
 
 <div class="scroll-area">
   <main id="main-list"></main>
@@ -345,63 +381,113 @@ main {
   </div>
   <div class="action-row">
     <button class="btn-action" onclick="clearDone()">✓ Kész törlése</button>
-    <button class="btn-action" onclick="resetAll()">↺ Visszaállítás</button>
+    <button class="btn-action" onclick="copyFromPrev()">⬅ Tegnap másolása</button>
   </div>
 </div>
 
 <script>
-const DEFAULTS = [
-  {id:1,time:"07:00",text:"Ébredés & reggeli rutin",done:false},
-  {id:2,time:"08:00",text:"Reggeli",done:false},
-  {id:3,time:"09:00",text:"Legfontosabb feladat",done:false},
-  {id:4,time:"11:00",text:"E-mailek & üzenetek",done:false},
-  {id:5,time:"12:30",text:"Ebéd & pihenő",done:false},
-  {id:6,time:"14:00",text:"Megbeszélés / projekt",done:false},
-  {id:7,time:"16:00",text:"Adminisztráció",done:false},
-  {id:8,time:"18:00",text:"Mozgás / sport",done:false},
-  {id:9,time:"20:00",text:"Vacsora & lezárás",done:false},
-];
-
-let tasks=[], nextId=10;
-
-function load(){
-  try{
-    const s=localStorage.getItem('napirend_v3');
-    if(s){const d=JSON.parse(s);tasks=d.tasks;nextId=d.nextId||10;}
-    else tasks=DEFAULTS.map(t=>({...t}));
-  }catch(e){tasks=DEFAULTS.map(t=>({...t}));}
+// Dátum kulcs: YYYY-MM-DD
+function dateKey(offset) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0, 10);
 }
 
-function save(){
-  try{localStorage.setItem('napirend_v3',JSON.stringify({tasks,nextId}));}catch(e){}
+function keyToDate(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d);
 }
 
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function formatDate(key) {
+  const d = keyToDate(key);
+  const days = ['Vasárnap','Hétfő','Kedd','Szerda','Csütörtök','Péntek','Szombat'];
+  const months = ['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
+  return {
+    day: days[d.getDay()],
+    full: d.getFullYear() + '. ' + months[d.getMonth()] + ' ' + d.getDate() + '.'
+  };
+}
 
-function render(){
-  const sorted=[...tasks].sort((a,b)=>a.time.localeCompare(b.time));
-  const done=tasks.filter(t=>t.done).length;
-  const total=tasks.length;
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById('progress-badge').textContent=done+' / '+total;
-  document.getElementById('progress-bar').style.width=pct+'%';
-  const container=document.getElementById('main-list');
-  if(!tasks.length){container.innerHTML='<div class="empty">Nincs feladat 🌱<br>Adj hozzá egyet!</div>';return;}
-  container.innerHTML='';
-  let lastGroup=null;
-  sorted.forEach(task=>{
-    const h=parseInt(task.time.split(':')[0]);
-    const group=h<12?'🌅 Délelőtt':h<17?'☀️ Délután':'🌙 Este';
-    if(group!==lastGroup){
-      const lbl=document.createElement('div');
-      lbl.className='section-label';
-      lbl.textContent=group;
+let currentOffset = 0;
+let nextId = 1;
+
+function currentKey() { return dateKey(currentOffset); }
+
+function loadAll() {
+  try { return JSON.parse(localStorage.getItem('napirend_days') || '{}'); } catch(e) { return {}; }
+}
+
+function saveAll(data) {
+  try { localStorage.setItem('napirend_days', JSON.stringify(data)); } catch(e) {}
+}
+
+function getTasks(key) {
+  const data = loadAll();
+  return data[key] ? data[key] : [];
+}
+
+function setTasks(key, tasks) {
+  const data = loadAll();
+  data[key] = tasks;
+  saveAll(data);
+}
+
+function getNextId() {
+  try {
+    const n = parseInt(localStorage.getItem('napirend_nextid') || '1');
+    localStorage.setItem('napirend_nextid', n + 1);
+    return n;
+  } catch(e) { return Date.now(); }
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function render() {
+  const key = currentKey();
+  const tasks = getTasks(key);
+  const sorted = [...tasks].sort((a,b) => a.time.localeCompare(b.time));
+  const done = tasks.filter(t => t.done).length;
+  const total = tasks.length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const todayKey = dateKey(0);
+  const fmt = formatDate(key);
+
+  document.getElementById('date-label').textContent = fmt.full;
+  const titleEl = document.getElementById('day-title');
+  titleEl.textContent = fmt.day + (key === todayKey ? ' ·  Ma' : '');
+
+  document.getElementById('progress-badge').textContent = done + ' / ' + total;
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  const container = document.getElementById('main-list');
+
+  if (!tasks.length) {
+    const prevKey = dateKey(currentOffset - 1);
+    const prevTasks = getTasks(prevKey);
+    container.innerHTML = `<div class="empty">Ezen a napon nincs feladat 📋<br>Adj hozzá egyet!${prevTasks.length ? '<br><button class="copy-btn" onclick="copyFromPrev()">⬅ Másolom tegnap feladatait</button>' : ''}</div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  let lastGroup = null;
+
+  sorted.forEach(task => {
+    const h = parseInt(task.time.split(':')[0]);
+    const group = h < 12 ? '🌅 Délelőtt' : h < 17 ? '☀️ Délután' : '🌙 Este';
+
+    if (group !== lastGroup) {
+      const lbl = document.createElement('div');
+      lbl.className = 'section-label';
+      lbl.textContent = group;
       container.appendChild(lbl);
-      lastGroup=group;
+      lastGroup = group;
     }
-    const card=document.createElement('div');
-    card.className='task-card'+(task.done?' done':'');
-    card.innerHTML=`
+
+    const card = document.createElement('div');
+    card.className = 'task-card' + (task.done ? ' done' : '');
+    card.innerHTML = `
       <div class="checkbox">
         <svg class="check-icon" width="13" height="13" viewBox="0 0 13 13" fill="none">
           <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -412,60 +498,90 @@ function render(){
         <div class="task-text">${esc(task.text)}</div>
       </div>
       <button class="task-del" aria-label="Törlés">×</button>`;
-    card.querySelector('.task-del').addEventListener('click',e=>{
+
+    card.querySelector('.task-del').addEventListener('click', e => {
       e.stopPropagation();
-      card.style.opacity='0';
-      card.style.transform='scale(0.95)';
-      setTimeout(()=>{tasks=tasks.filter(t=>t.id!==task.id);save();render();},180);
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        const tasks2 = getTasks(key).filter(t => t.id !== task.id);
+        setTasks(key, tasks2);
+        render();
+      }, 180);
     });
-    card.addEventListener('click',()=>{task.done=!task.done;save();render();});
+
+    card.addEventListener('click', () => {
+      const tasks2 = getTasks(key).map(t => t.id === task.id ? {...t, done: !t.done} : t);
+      setTasks(key, tasks2);
+      render();
+    });
+
     container.appendChild(card);
   });
 }
 
-function addTask(){
-  const textEl=document.getElementById('new-text');
-  const timeEl=document.getElementById('new-time');
-  const text=textEl.value.trim();
-  if(!text){textEl.focus();return;}
-  tasks.push({id:nextId++,time:timeEl.value||'09:00',text,done:false});
-  textEl.value='';
-  save();render();textEl.focus();
+function changeDay(dir) {
+  currentOffset += dir;
+  document.getElementById('scroll-area') && (document.querySelector('.scroll-area').scrollTop = 0);
+  render();
 }
 
-function clearDone(){tasks=tasks.filter(t=>!t.done);save();render();}
-function resetAll(){if(confirm('Visszaállítsuk az alapértelmezett napirendet?')){tasks=DEFAULTS.map(t=>({...t}));nextId=10;save();render();}}
-
-document.getElementById('new-text').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
-
-const now=new Date();
-const days=['Vasárnap','Hétfő','Kedd','Szerda','Csütörtök','Péntek','Szombat'];
-const months=['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
-document.getElementById('date-label').textContent=days[now.getDay()]+' · '+now.getFullYear()+'. '+months[now.getMonth()]+' '+now.getDate()+'.';
-
-// Android PWA install
-let deferredPrompt=null;
-const banner=document.getElementById('install-banner');
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();deferredPrompt=e;banner.style.display='flex';
-});
-document.getElementById('btn-install').addEventListener('click',async()=>{
-  if(!deferredPrompt)return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;banner.style.display='none';
-});
-document.getElementById('btn-dismiss').addEventListener('click',()=>{banner.style.display='none';});
-window.addEventListener('appinstalled',()=>{banner.style.display='none';});
-
-// Service Worker a teljes offline működéshez
-if('serviceWorker' in navigator){
-  const sw=`const C='napirend-v1';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response(''))));`;
-  const blob=new Blob([sw],{type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+function goToday() {
+  currentOffset = 0;
+  render();
 }
 
-load();render();
+function addTask() {
+  const textEl = document.getElementById('new-text');
+  const timeEl = document.getElementById('new-time');
+  const text = textEl.value.trim();
+  if (!text) { textEl.focus(); return; }
+  const key = currentKey();
+  const tasks = getTasks(key);
+  tasks.push({ id: getNextId(), time: timeEl.value || '09:00', text, done: false });
+  setTasks(key, tasks);
+  textEl.value = '';
+  render();
+  textEl.focus();
+}
+
+function clearDone() {
+  const key = currentKey();
+  setTasks(key, getTasks(key).filter(t => !t.done));
+  render();
+}
+
+function copyFromPrev() {
+  const prevKey = dateKey(currentOffset - 1);
+  const prevTasks = getTasks(prevKey);
+  if (!prevTasks.length) { alert('Az előző napnak nincsenek feladatai.'); return; }
+  const key = currentKey();
+  const existing = getTasks(key);
+  const copied = prevTasks.map(t => ({ ...t, id: getNextId(), done: false }));
+  setTasks(key, [...existing, ...copied]);
+  render();
+}
+
+// Swipe support
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 60) changeDay(diff > 0 ? 1 : -1);
+}, { passive: true });
+
+document.getElementById('new-text').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTask();
+});
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  const sw = `const C='napirend-v2';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response(''))));`;
+  const blob = new Blob([sw], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+}
+
+render();
 </script>
 </body>
 </html>
